@@ -37,9 +37,22 @@ public class EnversCommands implements CommandMarker { // All command types must
      * 
      * @return true (default) if the command should be visible at this stage, false otherwise
      */
+    @CliAvailabilityIndicator({ "envers add" })
+    public boolean isCommandAvailable() {
+        return operations.isCommandAvailable();
+    }
+    /*
     @CliAvailabilityIndicator({ "envers setup", "envers add", "envers all" })
     public boolean isCommandAvailable() {
         return operations.isCommandAvailable();
+    }
+    */
+    
+    @CliCommand(value = "entity jpa envers")
+    public void setupEntityAudit(
+    	@CliOption(key = "audit", mandatory = false, specifiedDefaultValue = "true", unspecifiedDefaultValue = "false", help = "Activate auditing") final String password
+    	){
+        operations.setupEntityAudit();
     }
     
     /**

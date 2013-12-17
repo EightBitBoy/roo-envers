@@ -30,4 +30,9 @@ public interface EnversOperations {
      * Setup all add-on artifacts (dependencies in this case)
      */
     void setup();
+    
+    /**
+     * Annotate entity to make it auditable
+     */
+    void setupEntityAudit();
 }
