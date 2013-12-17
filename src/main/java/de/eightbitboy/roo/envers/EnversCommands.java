@@ -41,19 +41,15 @@ public class EnversCommands implements CommandMarker { // All command types must
     public boolean isCommandAvailable() {
         return operations.isCommandAvailable();
     }
-    /*
-    @CliAvailabilityIndicator({ "envers setup", "envers add", "envers all" })
-    public boolean isCommandAvailable() {
-        return operations.isCommandAvailable();
-    }
-    */
     
+    /*
     @CliCommand(value = "entity jpa envers")
     public void setupEntityAudit(
     	@CliOption(key = "audit", mandatory = false, specifiedDefaultValue = "true", unspecifiedDefaultValue = "false", help = "Activate auditing") final String password
     	){
         operations.setupEntityAudit();
     }
+    */
     
     /**
      * This method registers a command with the Roo shell. It also offers a mandatory command attribute.
@@ -63,23 +59,5 @@ public class EnversCommands implements CommandMarker { // All command types must
     @CliCommand(value = "envers add", help = "Some helpful description")
     public void add(@CliOption(key = "type", mandatory = true, help = "The java type to apply this annotation to") JavaType target) {
         operations.annotateType(target);
-    }
-    
-    /**
-     * This method registers a command with the Roo shell. It has no command attribute.
-     * 
-     */
-    @CliCommand(value = "envers all", help = "Some helpful description")
-    public void all() {
-        operations.annotateAll();
-    }
-    
-    /**
-     * This method registers a command with the Roo shell. It has no command attribute.
-     * 
-     */
-    @CliCommand(value = "envers setup", help = "Setup Envers addon")
-    public void setup() {
-        operations.setup();
     }
 }
