@@ -104,4 +104,10 @@ public class EnversOperationsImpl implements EnversOperations {
         // Add all new dependencies to pom.xml
         projectOperations.addDependencies("", dependencies);
     }
+
+	@Override
+	public void setupEntityAudit() {
+		// TODO Auto-generated method stub
+		
+	}
 }
