@@ -56,7 +56,7 @@ public class EnversCommands implements CommandMarker { // All command types must
      * 
      * @param type 
      */
-    @CliCommand(value = "envers add", help = "Some helpful description")
+    @CliCommand(value = "envers add", help = "Make the type auditable")
     public void add(@CliOption(key = "type", mandatory = true, help = "The java type to apply this annotation to") JavaType target) {
         operations.annotateType(target);
     }

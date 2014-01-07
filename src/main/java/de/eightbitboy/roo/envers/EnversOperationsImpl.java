@@ -108,6 +108,5 @@ public class EnversOperationsImpl implements EnversOperations {
 	@Override
 	public void setupEntityAudit() {
 		// TODO Auto-generated method stub
-		
 	}
 }

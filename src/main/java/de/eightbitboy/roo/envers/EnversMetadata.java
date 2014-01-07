@@ -1,9 +1,12 @@
 package de.eightbitboy.roo.envers;
 
+import static org.springframework.roo.model.JpaJavaType.ENTITY;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -13,6 +16,7 @@ import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
+import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
@@ -57,14 +61,48 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
+        // Add Annotations
+        builder.addAnnotation(getEntityAuditAnnotation(aspectName));
+        
         // Adding a new sample field definition
         builder.addField(getSampleField());
+        builder.addField(getFooBarField()); //TODO remove this
             
         // Adding a new sample method definition
         builder.addMethod(getSampleMethod());
         
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
+    }
+    
+    /**
+     * Creates the @Audited annotation to be applied to the entity
+     * 
+     * @return
+     */
+    private AnnotationMetadata getEntityAuditAnnotation(JavaType type) {
+    	AnnotationMetadata auditedAnnotation = getTypeAnnotation(type); //TODO add Audited annotation here
+    	
+    	AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(auditedAnnotation);
+    	annotationBuilder.build();
+    	
+    	return auditedAnnotation;
+    	/*
+        AnnotationMetadata entityAnnotation = getTypeAnnotation(ENTITY);
+        if (auditedAnnotation == null) {
+            return null;
+        }
+
+        if (StringUtils.isNotBlank(annotationValues.getEntityName())) {
+            final AnnotationMetadataBuilder entityBuilder = new AnnotationMetadataBuilder(
+                    entityAnnotation);
+            entityBuilder.addStringAttribute("name",
+                    annotationValues.getEntityName());
+            entityAnnotation = entityBuilder.build();
+        }
+
+        return entityAnnotation;
+        */
     }
     
     /**
@@ -84,6 +122,17 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
             JavaType.STRING); // Field type
         
         return fieldBuilder.build(); // Build and return a FieldMetadata instance
+    }
+    
+    //TODO remove this
+    private FieldMetadata getFooBarField(){
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
+        	getId(),
+        	0,
+        	new ArrayList<AnnotationMetadataBuilder>(),
+        	new JavaSymbolName("foobar"),
+        	JavaType.BOOLEAN_PRIMITIVE);
+        return fieldBuilder.build();
     }
     
     private MethodMetadata getSampleMethod() {
