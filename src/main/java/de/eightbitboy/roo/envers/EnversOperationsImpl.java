@@ -13,7 +13,10 @@ import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.operations.AbstractOperations;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.Path;
+import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.DependencyScope;
@@ -29,12 +32,17 @@ import org.w3c.dom.Element;
  */
 @Component // Use these Apache Felix annotations to register your commands class in the Roo container
 @Service
-public class EnversOperationsImpl implements EnversOperations {
+public class EnversOperationsImpl extends AbstractOperations implements EnversOperations {
     
     /**
      * Use ProjectOperations to install new dependencies, plugins, properties, etc into the project configuration
      */
     @Reference private ProjectOperations projectOperations;
+    
+    /**
+     * Use PathResolver to get paths for copying files
+     */
+    @Reference private PathResolver pathResolver;
 
     /**
      * Use TypeLocationService to find types which are annotated with a given annotation in the project
@@ -103,5 +111,8 @@ public class EnversOperationsImpl implements EnversOperations {
     private void modifyTags(){
     	//TODO modify tags instead of overwriting them!!!
     	
+    	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/tags/form/fields");
+    	
+    	copyDirectoryContents("tags", targetPath, true);
     }
 }
