@@ -95,5 +95,13 @@ public class EnversOperationsImpl implements EnversOperations {
 
         // Add all new dependencies to pom.xml
         projectOperations.addDependencies("", dependencies);
+        
+        // Modify tags to create views for entity revisions
+        this.modifyTags(); //TODO use modified tags for audited entities only
+    }
+    
+    private void modifyTags(){
+    	//TODO modify tags instead of overwriting them!!!
+    	
     }
 }
