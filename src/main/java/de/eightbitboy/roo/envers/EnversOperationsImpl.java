@@ -54,6 +54,8 @@ public class EnversOperationsImpl implements EnversOperations {
 
     /** {@inheritDoc} */
     public void annotateType(JavaType javaType) {
+    	this.setup();
+    	
         // Use Roo's Assert type for null checks
         Validate.notNull(javaType, "Java type required");
 
@@ -80,6 +82,8 @@ public class EnversOperationsImpl implements EnversOperations {
 
     /** {@inheritDoc} */
     public void annotateAll() {
+    	this.setup();
+    	
         // Use the TypeLocationService to scan project for all types with a specific annotation
         for (JavaType type: typeLocationService.findTypesWithAnnotation(new JavaType("org.springframework.roo.addon.javabean.RooJavaBean"))) {
             annotateType(type);
@@ -94,7 +98,7 @@ public class EnversOperationsImpl implements EnversOperations {
         List<Dependency> dependencies = new ArrayList<Dependency>();
         
         // Install the dependency on the add-on jar (
-        dependencies.add(new Dependency("de.eightbitboy.roo.envers", "de.eightbitboy.roo.envers", "0.1.0.BUILD-SNAPSHOT", DependencyType.JAR, DependencyScope.PROVIDED));
+        dependencies.add(new Dependency("de.eightbitboy.roo.envers", "de.eightbitboy.roo.envers", "0.1.0", DependencyType.JAR, DependencyScope.PROVIDED));
         
         // Install dependencies defined in external XML file
         for (Element dependencyElement : XmlUtils.findElements("/configuration/batch/dependencies/dependency", XmlUtils.getConfiguration(getClass()))) {

@@ -3,13 +3,25 @@
 	<batch>
 		<dependencies>
 			<!-- Ivy-style dependency definition -->
-			<dependency org="org.springframework.batch" name="spring-batch-core" rev="2.1.1.RELEASE" />
-			
-			<!-- Maven-style dependency definition (should be used if exclusions need to be defined) -->
+			<dependency org="org.springframework.batch" name="spring-batch-core"
+				rev="2.1.1.RELEASE" />
+
+			<!-- Maven-style dependency definition (should be used if exclusions need 
+				to be defined) -->
 			<dependency>
 				<groupId>org.springframework.batch</groupId>
 				<artifactId>spring-batch-admin-manager</artifactId>
-				 <version>1.0.0.RELEASE</version>
+				<version>1.0.0.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>4.2.2.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-envers</artifactId>
+				<version>4.2.2.Final</version>
 			</dependency>
 		</dependencies>
 	</batch>
