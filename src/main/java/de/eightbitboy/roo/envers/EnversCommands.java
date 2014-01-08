@@ -39,17 +39,16 @@ public class EnversCommands implements CommandMarker { // All command types must
      */
     @CliAvailabilityIndicator({ "envers add" })
     public boolean isCommandAvailable() {
-        return operations.isCommandAvailable();
+        return operations.isCommandAvailable(); //TODO show add command only after setup has been executed
     }
     
-    /*
-    @CliCommand(value = "entity jpa envers")
-    public void setupEntityAudit(
-    	@CliOption(key = "audit", mandatory = false, specifiedDefaultValue = "true", unspecifiedDefaultValue = "false", help = "Activate auditing") final String password
-    	){
-        operations.setupEntityAudit();
+    /**
+     * Set up dependencies
+     */
+    @CliCommand(value = "envers setup", help = "Add envers dependencies")
+    public void setup() {
+        operations.setup();
     }
-    */
     
     /**
      * This method registers a command with the Roo shell. It also offers a mandatory command attribute.

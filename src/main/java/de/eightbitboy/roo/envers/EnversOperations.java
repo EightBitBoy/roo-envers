@@ -22,17 +22,7 @@ public interface EnversOperations {
     void annotateType(JavaType type);
     
     /**
-     * Annotate all Java types with the trigger of this add-on
-     */
-    void annotateAll();
-    
-    /**
      * Setup all add-on artifacts (dependencies in this case)
      */
     void setup();
-    
-    /**
-     * Annotate entity to make it auditable
-     */
-    void setupEntityAudit();
 }
