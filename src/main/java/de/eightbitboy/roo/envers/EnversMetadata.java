@@ -16,8 +16,10 @@ import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
+import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.details.comments.CommentStructure;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
@@ -62,7 +64,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
         // Add Annotations
-        builder.addAnnotation(getEntityAuditAnnotation(aspectName));
+        builder.addAnnotation(getEntityAuditAnnotation());
         
         // Adding a new sample field definition
         builder.addField(getSampleField());
@@ -80,29 +82,14 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
      * 
      * @return
      */
-    private AnnotationMetadata getEntityAuditAnnotation(JavaType type) {
-    	AnnotationMetadata auditedAnnotation = getTypeAnnotation(type); //TODO add Audited annotation here
+    private AnnotationMetadata getEntityAuditAnnotation() {
+    	JavaType auditedType = new JavaType("Audited");
+    	AnnotationMetadata auditedAnnotation = getTypeAnnotation(auditedType);
     	
     	AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(auditedAnnotation);
     	annotationBuilder.build();
     	
     	return auditedAnnotation;
-    	/*
-        AnnotationMetadata entityAnnotation = getTypeAnnotation(ENTITY);
-        if (auditedAnnotation == null) {
-            return null;
-        }
-
-        if (StringUtils.isNotBlank(annotationValues.getEntityName())) {
-            final AnnotationMetadataBuilder entityBuilder = new AnnotationMetadataBuilder(
-                    entityAnnotation);
-            entityBuilder.addStringAttribute("name",
-                    annotationValues.getEntityName());
-            entityAnnotation = entityBuilder.build();
-        }
-
-        return entityAnnotation;
-        */
     }
     
     /**
