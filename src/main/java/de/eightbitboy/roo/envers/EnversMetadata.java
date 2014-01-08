@@ -1,29 +1,13 @@
 package de.eightbitboy.roo.envers;
 
-import static org.springframework.roo.model.JpaJavaType.ENTITY;
-
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
-import org.springframework.roo.classpath.details.FieldMetadata;
-import org.springframework.roo.classpath.details.FieldMetadataBuilder;
-import org.springframework.roo.classpath.details.MethodMetadata;
-import org.springframework.roo.classpath.details.MethodMetadataBuilder;
-import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
-import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
-import org.springframework.roo.classpath.details.comments.CommentStructure;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
-import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
-import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 
@@ -66,13 +50,6 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
         
-        // Adding a new sample field definition
-        builder.addField(getSampleField());
-        builder.addField(getFooBarField()); //TODO remove this
-            
-        // Adding a new sample method definition
-        builder.addMethod(getSampleMethod());
-        
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
     }
@@ -83,90 +60,13 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
      * @return
      */
     private AnnotationMetadata getEntityAuditAnnotation() {
-    	JavaType auditedType = new JavaType("Audited");
+    	JavaType auditedType = new JavaType("org.hibernate.envers.Audited");
     	AnnotationMetadata auditedAnnotation = getTypeAnnotation(auditedType);
     	
     	AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(auditedAnnotation);
     	annotationBuilder.build();
     	
     	return auditedAnnotation;
-    }
-    
-    /**
-     * Create metadata for a field definition. 
-     *
-     * @return a FieldMetadata object
-     */
-    private FieldMetadata getSampleField() {
-        // Note private fields are private to the ITD, not the target type, this is undesirable if a dependent method is pushed in to the target type
-        int modifier = 0;
-        
-        // Using the FieldMetadataBuilder to create the field definition. 
-        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
-            modifier, // Using package protection rather than private
-            new ArrayList<AnnotationMetadataBuilder>(), // No annotations for this field
-            new JavaSymbolName("sampleField"), // Field name
-            JavaType.STRING); // Field type
-        
-        return fieldBuilder.build(); // Build and return a FieldMetadata instance
-    }
-    
-    //TODO remove this
-    private FieldMetadata getFooBarField(){
-        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
-        	getId(),
-        	0,
-        	new ArrayList<AnnotationMetadataBuilder>(),
-        	new JavaSymbolName("foobar"),
-        	JavaType.BOOLEAN_PRIMITIVE);
-        return fieldBuilder.build();
-    }
-    
-    private MethodMetadata getSampleMethod() {
-        // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("sampleMethod");
-        
-        // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            // If it already exists, just return the method and omit its generation via the ITD
-            return method;
-        }
-        
-        // Define method annotations (none in this case)
-        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        
-        // Define method throws types (none in this case)
-        List<JavaType> throwsTypes = new ArrayList<JavaType>();
-        
-        // Define method parameter types (none in this case)
-        List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
-        
-        // Define method parameter names (none in this case)
-        List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
-        
-        // Create the method body
-        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("System.out.println(\"Hello World\");");
-        
-        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
-        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(), Modifier.PUBLIC, methodName, JavaType.VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
-        methodBuilder.setAnnotations(annotations);
-        methodBuilder.setThrowsTypes(throwsTypes);
-        
-        return methodBuilder.build(); // Build and return a MethodMetadata instance
-    }
-        
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName) && method.getParameterTypes().equals(paramTypes)) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
-        }
-        return null;
     }
     
     // Typically, no changes are required beyond this point
