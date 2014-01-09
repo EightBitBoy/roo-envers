@@ -89,7 +89,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     /** {@inheritDoc} */
     public void setup() {
         // Install the add-on Google code repository needed to get the annotation 
-        projectOperations.addRepository("", new Repository("Envers Roo add-on repository", "Envers Roo add-on repository", "https://roo-envers.googlecode.com/svn/repo"));
+        //projectOperations.addRepository("", new Repository("Envers Roo add-on repository", "Envers Roo add-on repository", "https://roo-envers.googlecode.com/svn/repo"));
         
         List<Dependency> dependencies = new ArrayList<Dependency>();
         
@@ -113,6 +113,6 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     	
     	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/tags/form/fields");
     	
-    	copyDirectoryContents("tags", targetPath, true);
+    	copyDirectoryContents("tags/*.*", targetPath, true);
     }
 }
