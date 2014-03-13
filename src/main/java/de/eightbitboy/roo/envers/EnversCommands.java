@@ -1,13 +1,20 @@
 package de.eightbitboy.roo.envers;
 
+import static org.springframework.roo.shell.OptionContexts.UPDATE;
+
+import java.util.logging.Logger;
+
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
 import org.springframework.roo.shell.CommandMarker;
+import org.springframework.roo.support.logging.HandlerUtils;
 
 /**
  * Sample of a command class. The command class is registered by the Roo shell following an
@@ -22,10 +29,13 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class EnversCommands implements CommandMarker { // All command types must implement the CommandMarker interface
     
+    private static Logger LOG = HandlerUtils.getLogger(EnversCommands.class);
+	
     /**
      * Get a reference to the EnversOperations from the underlying OSGi container
      */
     @Reference private EnversOperations operations;
+    @Reference private ProjectOperations projectOperations;
     
     /**
      * This method is optional. It allows automatic command hiding in situations when the command should not be visible.
@@ -56,7 +66,17 @@ public class EnversCommands implements CommandMarker { // All command types must
      * @param type 
      */
     @CliCommand(value = "envers add", help = "Make the type auditable")
-    public void add(@CliOption(key = "type", mandatory = true, help = "The java type to apply this annotation to") JavaType target) {
-        operations.annotateType(target);
+    public void add(
+    		@CliOption(key = "type", mandatory = true, help = "The java type to apply this annotation to") JavaType target,
+    		@CliOption(key = "package", mandatory = true, optionContext = UPDATE, help = "The package in which new controllers will be placed, CHOSE THE SAME PACKAGE USED IN web mvc all command") final JavaPackage javaPackage) {
+    	
+        if (!javaPackage.getFullyQualifiedPackageName().startsWith(
+                projectOperations.getTopLevelPackage(
+                        projectOperations.getFocusedModuleName())
+                        .getFullyQualifiedPackageName())) {
+            LOG.warning("Your controller was created outside of the project's top level package and is therefore not included in the preconfigured component scanning. Please adjust your component scanning manually in webmvc-config.xml");
+        }
+    	
+        operations.annotateType(target, javaPackage);
     }
 }

@@ -1,5 +1,7 @@
 package de.eightbitboy.roo.envers;
 
+import java.util.logging.Logger;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -10,6 +12,7 @@ import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMeta
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.support.logging.HandlerUtils;
 
 /**
  * This type produces metadata for a new ITD. It uses an {@link ItdTypeDetailsBuilder} provided by 
@@ -19,7 +22,8 @@ import org.springframework.roo.project.LogicalPath;
  */
 public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
 
-    // Constants
+	private static Logger LOG = HandlerUtils.getLogger(EnversCommands.class);
+	
     private static final String PROVIDES_TYPE_STRING = EnversMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
@@ -44,9 +48,13 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     }
     
     public EnversMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
-        super(identifier, aspectName, governorPhysicalTypeMetadata);
+    	//super(identifier, aspectName, governorPhysicalTypeMetadata);
+    	super(identifier, new JavaType("BAR"), governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
+        LOG.info(identifier);
+        LOG.info(governorPhysicalTypeMetadata.toString());
+        
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
         

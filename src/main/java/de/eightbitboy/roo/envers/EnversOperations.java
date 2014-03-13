@@ -1,5 +1,6 @@
 package de.eightbitboy.roo.envers;
 
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 
 /**
@@ -19,7 +20,7 @@ public interface EnversOperations {
     /**
      * Annotate the provided Java type with the trigger of this add-on
      */
-    void annotateType(JavaType type);
+    void annotateType(JavaType type, JavaPackage javaPackage);
     
     /**
      * Setup all add-on artifacts (dependencies in this case)

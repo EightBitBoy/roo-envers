@@ -1,8 +1,10 @@
 package de.eightbitboy.roo.envers;
 
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
+import org.springframework.roo.addon.web.mvc.controller.details.WebMetadataService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
@@ -20,6 +22,7 @@ import org.springframework.roo.project.LogicalPath;
 @Component
 @Service
 public final class EnversMetadataProvider extends AbstractItdMetadataProvider {
+	@Reference WebMetadataService webMetadataService;
 
     /**
      * The activate method for this OSGi component, this will be called by the OSGi container upon bundle activation 
@@ -46,7 +49,11 @@ public final class EnversMetadataProvider extends AbstractItdMetadataProvider {
     /**
      * Return an instance of the Metadata offered by this add-on
      */
-    protected ItdTypeDetailsProvidingMetadataItem getMetadata(String metadataIdentificationString, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata, String itdFilename) {
+    protected ItdTypeDetailsProvidingMetadataItem getMetadata(
+    		String metadataIdentificationString,
+    		JavaType aspectName,
+    		PhysicalTypeMetadata governorPhysicalTypeMetadata,
+    		String itdFilename) {
         // Pass dependencies required by the metadata in through its constructor
         return new EnversMetadata(metadataIdentificationString, aspectName, governorPhysicalTypeMetadata);
     }
