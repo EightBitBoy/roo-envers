@@ -19,7 +19,7 @@
     <description>An add-on created by Spring Roo's addon creator feature.</description>
     <url>http://www.some.company</url>
     <properties>
-        <roo.version>1.2.4.RELEASE</roo.version>
+        <roo.version>1.2.6.BUILD-SNAPSHOT</roo.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <google.code.project.name>${project.name}</google.code.project.name>
         <repo.folder>de/eightbitboy/roo/envers</repo.folder>
@@ -95,6 +95,16 @@
         <dependency>
             <groupId>org.springframework.roo</groupId>
             <artifactId>org.springframework.roo.classpath</artifactId>
+            <version>${roo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.addon.plural</artifactId>
+            <version>${roo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.addon.web.mvc.controller</artifactId>
             <version>${roo.version}</version>
         </dependency>
         <!-- Apache commons -->
