@@ -1,15 +1,20 @@
 package de.eightbitboy.roo.envers;
 
+import java.lang.reflect.Modifier;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.details.MethodMetadata;
+import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
+import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.support.logging.HandlerUtils;
@@ -48,7 +53,6 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     }
     
     public EnversMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
-    	//super(identifier, aspectName, governorPhysicalTypeMetadata);
     	super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
@@ -58,12 +62,15 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
         
+        // Add Methods
+        builder.addMethod(getDoSomethingMethod());
+        
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
     }
     
     /**
-     * Creates the @Audited annotation to be applied to the entity
+     * Creates the @Audited annotation for the entity
      * 
      * @return
      */
@@ -75,6 +82,20 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	annotationBuilder.build();
     	
     	return auditedAnnotation;
+    }
+    
+    private MethodMetadata getDoSomethingMethod() {
+    	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
+    	
+    	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+    		getId(),
+    		Modifier.PUBLIC,
+    		new JavaSymbolName("doSomething"),
+    		JavaType.VOID_PRIMITIVE,
+    		bodyBuilder);
+    	
+    	return methodBuilder.build();
     }
     
     // Typically, no changes are required beyond this point
