@@ -56,14 +56,14 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
-        LOG.info(identifier);
-        LOG.info(governorPhysicalTypeMetadata.toString());
+        //LOG.info(identifier);
+        //LOG.info(governorPhysicalTypeMetadata.toString());
         
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
         
         // Add Methods
-        builder.addMethod(getDoSomethingMethod());
+        builder.addMethod(getDoSomethingMethod()); //TODO remove this whem things start looking good
         
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
