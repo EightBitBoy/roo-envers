@@ -49,7 +49,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     
     public EnversMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
     	//super(identifier, aspectName, governorPhysicalTypeMetadata);
-    	super(identifier, new JavaType("BAR"), governorPhysicalTypeMetadata);
+    	super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
         LOG.info(identifier);
