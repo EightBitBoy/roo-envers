@@ -125,6 +125,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         	javaPackage.getFullyQualifiedPackageName() + "." +
         	entityDetails.getType().getSimpleTypeName() + "Controller_Roo_Controller");
         
+        
         /*
         createAutomaticController(controller, entityType, new HashSet<String>(), pluralMetadata.getPlural().toLowerCase());
         */
@@ -155,7 +156,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
         	declaredByMetadataId, Modifier.PUBLIC, type, PhysicalTypeCategory.ITD);
         
-        typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());
+        //typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());
         
         //
         //

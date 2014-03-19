@@ -62,6 +62,16 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
         
+        JavaType customAspectname = new JavaType("foo.bar.baz.FooBar");
+        String customIdentifier = "foobar";
+        
+        LOG.info(identifier.toLowerCase());
+        LOG.info(aspectName.toString());
+  
+        //EnversControllerMetadata foo = new EnversControllerMetadata(identifier, customAspectname, governorPhysicalTypeMetadata);
+        
+        
+    
         // Add Methods
         builder.addMethod(getDoSomethingMethod()); //TODO remove this whem things start looking good
         
