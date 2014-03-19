@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.osgi.service.blueprint.reflect.MapMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -74,6 +75,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     
         // Add Methods
         builder.addMethod(getDoSomethingMethod()); //TODO remove this whem things start looking good
+        builder.addMethod(getExampleMethod());
         
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -95,6 +97,20 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     }
     
     private MethodMetadata getDoSomethingMethod() {
+    	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
+    	
+    	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+    		getId(),
+    		Modifier.PUBLIC,
+    		new JavaSymbolName("doSomething"),
+    		JavaType.VOID_PRIMITIVE,
+    		bodyBuilder);
+    	
+    	return methodBuilder.build();
+    }
+    
+    private MethodMetadata getExampleMethod() {
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
     	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
     	
