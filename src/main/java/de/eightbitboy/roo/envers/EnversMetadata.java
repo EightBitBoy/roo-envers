@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.osgi.service.blueprint.reflect.MapMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
@@ -75,7 +76,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     
         // Add Methods
         builder.addMethod(getDoSomethingMethod()); //TODO remove this whem things start looking good
-        builder.addMethod(getExampleMethod());
+        builder.addMethod(getListAuditsMethod());
         
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -100,6 +101,8 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
     	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
     	
+
+    	
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
     		getId(),
     		Modifier.PUBLIC,
@@ -110,15 +113,15 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	return methodBuilder.build();
     }
     
-    private MethodMetadata getExampleMethod() {
+    private MethodMetadata getListAuditsMethod() {
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
+    	bodyBuilder.appendFormalLine("return \"Hello world!\";");
     	
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-    		getId(),
+    		getId() + "Controller",
     		Modifier.PUBLIC,
-    		new JavaSymbolName("doSomething"),
-    		JavaType.VOID_PRIMITIVE,
+    		new JavaSymbolName("listAudits"),
+    		JavaType.STRING,
     		bodyBuilder);
     	
     	return methodBuilder.build();
