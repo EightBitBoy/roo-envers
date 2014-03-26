@@ -98,10 +98,10 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
             ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(entityDetails);
             
             // Create JavaType instance for the add-ons trigger annotation
-            JavaType rooRooEnvers = new JavaType(RooEnvers.class.getName());
+            JavaType rooEnvers = new JavaType(RooEnvers.class.getName());
 
             // Create Annotation metadata
-            AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooRooEnvers);
+            AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnvers);
             
             // Add annotation to target type
             classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
@@ -111,8 +111,15 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         }
         
         
-        JavaType typeController = new JavaType(type.getSimpleTypeName() + "Controller");
-        ClassOrInterfaceTypeDetails typeControllerDetails = typeLocationService.getTypeDetails(typeController);        
+        // Add an annotation to the existing controller
+        JavaType typeController = new JavaType(javaPackage.getFullyQualifiedPackageName() + "." + type.getSimpleTypeName() + "Controller");
+        ClassOrInterfaceTypeDetails typeControllerDetails = typeLocationService.getTypeDetails(typeController);
+        
+        ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
+        JavaType rooEnversController = new JavaType(RooEnvers.class.getName() + "Controller");
+        AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController);
+        classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
+        typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
     }
     
     /** {@inheritDoc} */
