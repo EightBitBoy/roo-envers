@@ -89,6 +89,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     	
         // Use Roo's Assert type for null checks
         Validate.notNull(type, "Java type required");
+        Validate.notNull(javaPackage, "Java package required, web mvc all command package required");
 
         // Obtain ClassOrInterfaceTypeDetails for this java type
         ClassOrInterfaceTypeDetails entityDetails = typeLocationService.getTypeDetails(type);
@@ -111,10 +112,11 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         }
         
         
-        // Add an annotation to the existing controller
+        // Get details for existing controller
         JavaType typeController = new JavaType(javaPackage.getFullyQualifiedPackageName() + "." + type.getSimpleTypeName() + "Controller");
         ClassOrInterfaceTypeDetails typeControllerDetails = typeLocationService.getTypeDetails(typeController);
         
+        // Add annotation @RooEnversController to existing controller
         ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
         JavaType rooEnversController = new JavaType(RooEnvers.class.getName() + "Controller");
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController);
