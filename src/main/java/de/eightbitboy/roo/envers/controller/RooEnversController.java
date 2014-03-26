@@ -1,4 +1,4 @@
-package de.eightbitboy.roo.envers;
+package de.eightbitboy.roo.envers.controller;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

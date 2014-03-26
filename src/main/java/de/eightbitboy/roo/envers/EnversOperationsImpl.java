@@ -1,38 +1,24 @@
 package de.eightbitboy.roo.envers;
 
-import static org.springframework.roo.model.SpringJavaType.REQUEST_MAPPING;
-
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.classpath.PhysicalTypeCategory;
-import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
-import org.springframework.roo.classpath.details.FieldMetadata;
-import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
-import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
-import org.springframework.roo.classpath.details.annotations.ArrayAttributeValue;
-import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.operations.AbstractOperations;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.ProjectOperations;
@@ -118,7 +104,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         
         // Add annotation @RooEnversController to existing controller
         ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
-        JavaType rooEnversController = new JavaType(RooEnvers.class.getName() + "Controller");
+        JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController);
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
         typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
@@ -153,51 +139,5 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/tags/form/fields");
     	
     	copyDirectoryContents("tags/*.*", targetPath, true);
-    }
-    
-    /**
-     * Looks for an existing controller mapped to the given path
-     * 
-     * Copied directly form org.springframework.roo.addon.web.mvc.controller.ControllerOperationsImpl
-     * 
-     * @param path (required)
-     * @return <code>null</code> if there is no such controller
-     */
-    private ClassOrInterfaceTypeDetails getExistingController(final String path) {
-        for (final ClassOrInterfaceTypeDetails cid : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(REQUEST_MAPPING)) {
-            final AnnotationAttributeValue<?> attribute = MemberFindingUtils
-                    .getAnnotationOfType(cid.getAnnotations(), REQUEST_MAPPING)
-                    .getAttribute(VALUE);
-            if (attribute instanceof ArrayAttributeValue) {
-                final ArrayAttributeValue<?> mappingAttribute = (ArrayAttributeValue<?>) attribute;
-                if (mappingAttribute.getValue().size() > 1) {
-                    LOGGER.warning("Skipping controller '"
-                            + cid.getName().getFullyQualifiedTypeName()
-                            + "' as it contains more than one path");
-                    continue;
-                }
-                else if (mappingAttribute.getValue().size() == 1) {
-                    final StringAttributeValue attr = (StringAttributeValue) mappingAttribute
-                            .getValue().get(0);
-                    final String mapping = attr.getValue();
-                    if (StringUtils.isNotBlank(mapping)
-                            && mapping.equalsIgnoreCase("/" + path)) {
-                        return cid;
-                    }
-                }
-            }
-            else if (attribute instanceof StringAttributeValue) {
-                final StringAttributeValue mappingAttribute = (StringAttributeValue) attribute;
-                if (mappingAttribute != null) {
-                    final String mapping = mappingAttribute.getValue();
-                    if (StringUtils.isNotBlank(mapping)
-                            && mapping.equalsIgnoreCase("/" + path)) {
-                        return cid;
-                    }
-                }
-            }
-        }
-        return null;
     }
 }
