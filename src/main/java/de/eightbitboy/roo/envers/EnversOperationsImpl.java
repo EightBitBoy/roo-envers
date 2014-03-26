@@ -109,83 +109,10 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
             // Save changes to disk
             typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
         }
-
-        //TODO see ControllerCommands.java in org.springframework.roo.addon.web.mvc.controller
-        
-        // Create new controller which holds envers-specific mappings
-        
-        //TODO probably do not need this
-        final PluralMetadata pluralMetadata = (PluralMetadata) metadataService.get(
-        	PluralMetadata.createIdentifier(entityDetails.getType(),
-        	PhysicalTypeIdentifier.getPath(entityDetails.getDeclaredByMetadataId())));
-        
-        //TODO get controller path by using typeLocationService.getTypePath, maybe other method or class Physicaltypeidentifier,
-        //no need for javaPackage parameter then
-        final JavaType controller = new JavaType(
-        	javaPackage.getFullyQualifiedPackageName() + "." +
-        	entityDetails.getType().getSimpleTypeName() + "Controller_Roo_Controller");
         
         
-        /*
-        createAutomaticController(controller, entityType, new HashSet<String>(), pluralMetadata.getPlural().toLowerCase());
-        */
-        
-        
-        final LogicalPath controllerPath = pathResolver.getFocusedPath(Path.SRC_MAIN_JAVA);
-        final String resourceIdentifier = typeLocationService.getPhysicalTypeCanonicalPath(controller, controllerPath);
-        LOG.info("resourceIdentifier: " + resourceIdentifier.toString());
-        //final ClassOrInterfaceTypeDetails existingController = getExistingController(resourceIdentifier);
-        
-        //LOG.info(typeLocationService.getTypePath(controller).toString());
-        
-        
-        //LOG.info(existingController.toString());
-        
-        
-        
-        final String declaredByMetadataId = PhysicalTypeIdentifier.createIdentifier(controller, pathResolver.getPath(resourceIdentifier));
-        LOG.info(declaredByMetadataId.toString());
-        
-        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        
-        // Create annotation @RequestMapping("/myobject/**")
-        final List<AnnotationAttributeValue<?>> requestMappingAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-        requestMappingAttributes.add(new StringAttributeValue(VALUE, "/" + pluralMetadata.getPlural().toLowerCase()));
-        annotations.add(new AnnotationMetadataBuilder(REQUEST_MAPPING, requestMappingAttributes));
-        
-        ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
-        	declaredByMetadataId, Modifier.PUBLIC, type, PhysicalTypeCategory.ITD);
-        
-        //typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());
-        
-        //
-        //
-        //
-        //TODO just use AnimalController.java
-        
-        /*
-        
-        final JavaType exController = new JavaType(
-            	javaPackage.getFullyQualifiedPackageName() + "." +
-            	entityDetails.getType().getSimpleTypeName() + "Controller");
-        
-
-        final LogicalPath exControllerPath = pathResolver.getFocusedPath(Path.SRC_MAIN_JAVA);
-        final String exResourceIdentifier = typeLocationService.getPhysicalTypeCanonicalPath(exController, exControllerPath);
-        final String exDeclaredByMetadataId = PhysicalTypeIdentifier.createIdentifier(exController, pathResolver.getPath(exResourceIdentifier));
-        */
-        
-        /*
-        
-        fieldDetails 
-        
-        FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(fieldDetails)
-        FieldMetadata foo = 
-        
-        cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(exDeclaredByMetadataId, Modifier.PUBLIC, exController, PhysicalTypeCategory.CLASS);
-        cidBuilder.a
-        typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());
-        */
+        JavaType typeController = new JavaType(type.getSimpleTypeName() + "Controller");
+        ClassOrInterfaceTypeDetails typeControllerDetails = typeLocationService.getTypeDetails(typeController);        
     }
     
     /** {@inheritDoc} */
