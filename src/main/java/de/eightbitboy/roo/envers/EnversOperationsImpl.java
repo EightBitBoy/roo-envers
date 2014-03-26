@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.lang.model.element.AnnotationValue;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -13,7 +15,9 @@ import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
+import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.operations.AbstractOperations;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
@@ -105,7 +109,12 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         // Add annotation @RooEnversController to existing controller
         ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
         JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
-        AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController);
+        
+        
+        final List<AnnotationAttributeValue<?>> rooEnversControllerAttributes = new ArrayList<AnnotationAttributeValue<?>>();
+        rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
+        
+        AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController, rooEnversControllerAttributes);        
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
         typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
     }
@@ -135,7 +144,6 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     
     private void modifyTags(){
     	//TODO modify tags instead of overwriting them!!!
-    	
     	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/tags/form/fields");
     	
     	copyDirectoryContents("tags/*.*", targetPath, true);
