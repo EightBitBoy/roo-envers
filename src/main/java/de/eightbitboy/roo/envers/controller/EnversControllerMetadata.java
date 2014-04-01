@@ -1,6 +1,7 @@
 package de.eightbitboy.roo.envers.controller;
 
 import java.lang.reflect.Modifier;
+import java.util.logging.Logger;
 
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
@@ -12,11 +13,16 @@ import org.springframework.roo.metadata.MetadataIdentificationUtils;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.support.logging.HandlerUtils;
 
 public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
 	
+	private static Logger LOG = HandlerUtils.getLogger(EnversControllerMetadata.class);
+	
     private static final String PROVIDES_TYPE_STRING = EnversControllerMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
+    
+    private EnversControllerAnnotationValues annotationValues;
 
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -34,11 +40,13 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
         return PhysicalTypeIdentifierNamingUtils.getPath(PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 	
-	protected EnversControllerMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
+	protected EnversControllerMetadata(EnversControllerAnnotationValues annotationValues, String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
 		super(identifier, aspectName, governorPhysicalTypeMetadata);
 		
+		this.annotationValues = annotationValues;
+		LOG.info("Path: " + this.annotationValues.getPath());
+		
 		builder.addMethod(getListAuditsMethod());
-		builder.addMethod(getDoSomethingMethod());
 		
 		itdTypeDetails = builder.build();
 	}
@@ -55,22 +63,6 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
     		getId(),
     		Modifier.PUBLIC,
     		methodName,
-    		JavaType.VOID_PRIMITIVE,
-    		bodyBuilder);
-    	
-    	return methodBuilder.build();
-    }
-	
-    private MethodMetadata getDoSomethingMethod() {
-    	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
-    	
-
-    	
-    	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-    		getId(),
-    		Modifier.PUBLIC,
-    		new JavaSymbolName("doSomething"),
     		JavaType.VOID_PRIMITIVE,
     		bodyBuilder);
     	

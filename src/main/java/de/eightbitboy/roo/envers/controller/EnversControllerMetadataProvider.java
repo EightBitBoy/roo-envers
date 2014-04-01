@@ -33,7 +33,9 @@ public class EnversControllerMetadataProvider extends AbstractItdMetadataProvide
     		PhysicalTypeMetadata governorPhysicalTypeMetadata,
     		String itdFilename) {
         // Pass dependencies required by the metadata in through its constructor
-        return new EnversControllerMetadata(metadataIdentificationString, aspectName, governorPhysicalTypeMetadata);
+    	final EnversControllerAnnotationValues annotationValues = new EnversControllerAnnotationValues(governorPhysicalTypeMetadata);
+    	
+        return new EnversControllerMetadata(annotationValues, metadataIdentificationString, aspectName, governorPhysicalTypeMetadata);
     }
 	
     public String getItdUniquenessFilenameSuffix() {
