@@ -1,0 +1,8 @@
+project --topLevelPackage de.eightbitboy.envers --projectName enversTest
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
+web mvc setup
+entity jpa --class Animal
+field string --fieldName name
+web mvc all --package de.eightbitboy.envers.web
+envers setup
+envers add --type ~.Animal --package de.eightbitboy.envers.web

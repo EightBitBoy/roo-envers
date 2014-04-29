@@ -11,17 +11,22 @@ It is being developed in a Microsoft Windows environment. You will probably make
 You need Apache Maven.
 Get it here: http://maven.apache.org/download.cgi
 
+Add the binary folder path to your OS' path environment variable.
+
 Roo-Envers is being developed with Spring Roo version 1.2.6.BUILD-SNAPSHOT.
 Get it here: http://docs.spring.io/downloads/nightly/snapshot-download.php?project=ROO
 
-Unzip the archive and you are ready to go. You might want to add the binary folder path to your OS' path environment variable.
+Unzip the archive and you are ready to go. Add the binary folder path to your OS' path environment variable.
+
+(At this point a restart of your system or a quick signout/login might be necessary.)
 
 You need Roo's source code version 1.2.6.BUILD-SNAPSHOT.
 Get it here: https://github.com/spring-projects/spring-roo
 
 Open the Roo source code folder and edit the pom.xml file.
 
-Find the following code; delete or comment (`<!-- -->`) it!
+Find the following code; delete or comment (`<!-- -->`) it! The PGP signing procedure is not necessary for local development.
+
 ```xml
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -42,9 +47,14 @@ Find the following code; delete or comment (`<!-- -->`) it!
 </plugin>
 ```
 
-Open 
+Open a command prompt an build Roo. Skip the tests!
+```
+mvn install -DskipTests
+```
 
 ## Setup
+
+## Workflow
 
 ## Demo
 

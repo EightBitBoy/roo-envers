@@ -1,0 +1,3 @@
+osgi update --bundleSymbolicName de.eightbitboy.roo.envers
+script --file envers.roo
+quit
