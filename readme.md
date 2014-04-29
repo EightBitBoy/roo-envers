@@ -4,6 +4,8 @@
 
 Roo-Envers is an addon for the rapid application development tool Spring Roo.
 
+It is being developed in a Microsoft Windows environment. You will probably make Roo-Envers work on a different OS.
+
 ## Requirements
 
 You need Apache Maven.
@@ -19,7 +21,7 @@ Get it here: https://github.com/spring-projects/spring-roo
 
 Open the Roo source code folder and edit the pom.xml file.
 
-Find the following code; delete or comment (<!-- -->) it!
+Find the following code; delete or comment (`<!-- -->`) it!
 ```xml
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -39,6 +41,8 @@ Find the following code; delete or comment (<!-- -->) it!
 	</executions>
 </plugin>
 ```
+
+Open 
 
 ## Setup
 
