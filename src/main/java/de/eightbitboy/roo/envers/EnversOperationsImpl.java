@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.lang.model.element.AnnotationValue;
-
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -41,7 +39,6 @@ import org.w3c.dom.Element;
 @Component // Use these Apache Felix annotations to register your commands class in the Roo container
 @Service
 public class EnversOperationsImpl extends AbstractOperations implements EnversOperations {
-	private static final JavaSymbolName VALUE = new JavaSymbolName("value");
 	
 	private static Logger LOG = HandlerUtils.getLogger(EnversCommands.class);
     
@@ -110,12 +107,22 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
         JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
         
+        // Add annotation @RooEnversFinder to existing controller
+        classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
+        JavaType rooEnversFinder = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversFinder");
         
         final List<AnnotationAttributeValue<?>> rooEnversControllerAttributes = new ArrayList<AnnotationAttributeValue<?>>();
         rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
         
+        final List<AnnotationAttributeValue<?>> rooEnversFinderAttributes = new ArrayList<AnnotationAttributeValue<?>>();
+        rooEnversFinderAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
+        
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController, rooEnversControllerAttributes);        
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
+        
+        annotationBuilder = new AnnotationMetadataBuilder(rooEnversFinder, rooEnversFinderAttributes);        
+        classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
+        
         typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
     }
     
