@@ -96,6 +96,19 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
             
             // Save changes to disk
             typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
+            
+            
+            // Add annotation @RooEnversController to entity
+            JavaType rooEnversFinder = new JavaType("de.eightbitboy.roo.envers.finder.RooEnversFinder");
+            
+            final List<AnnotationAttributeValue<?>> rooEnversFinderAttributes = new ArrayList<AnnotationAttributeValue<?>>();
+            rooEnversFinderAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
+            
+            annotationBuilder = new AnnotationMetadataBuilder(rooEnversFinder, rooEnversFinderAttributes);
+            
+            classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
+            
+            typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
         }
         
         
@@ -107,20 +120,10 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
         JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
         
-        // Add annotation @RooEnversFinder to existing controller
-        classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(typeControllerDetails);
-        JavaType rooEnversFinder = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversFinder");
-        
         final List<AnnotationAttributeValue<?>> rooEnversControllerAttributes = new ArrayList<AnnotationAttributeValue<?>>();
         rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
-        
-        final List<AnnotationAttributeValue<?>> rooEnversFinderAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-        rooEnversFinderAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
-        
+ 
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController, rooEnversControllerAttributes);        
-        classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
-        
-        annotationBuilder = new AnnotationMetadataBuilder(rooEnversFinder, rooEnversFinderAttributes);        
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
         
         typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
