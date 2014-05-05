@@ -22,7 +22,10 @@ public class EnversFinderMetadata extends AbstractItdTypeDetailsProvidingMetadat
     private static final String PROVIDES_TYPE_STRING = EnversFinderMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
     
+    private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
+    
     private EnversFinderAnnotationValues annotationValues;
+    private String entityName;
 
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -45,16 +48,28 @@ public class EnversFinderMetadata extends AbstractItdTypeDetailsProvidingMetadat
 		LOG.info("Adding EnversFinder code");
 		
 		this.annotationValues = annotationValues;
+		this.entityName = annotationValues.getPath().toUpperCase();				
 
-		builder.addMethod(getFindAuditsMethod());
+		builder.addMethod(getFindAllAuditsMethod());
 		
 		itdTypeDetails = builder.build();
 	}
 	
-    private MethodMetadata getFindAuditsMethod() {
-    	final JavaSymbolName methodName = new JavaSymbolName("findAudits");
+    private MethodMetadata getFindAllAuditsMethod() {
+    	final JavaSymbolName methodName = new JavaSymbolName("findAllAudits");
     	
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+    	
+    	bodyBuilder.appendFormalLine("return "
+    		+ ENTITY_MANAGER_METHOD_NAME
+            + "().createQuery(\"SELECT o FROM " + entityName + " o\", "
+            + destination.getSimpleTypeName() + ".class).getResultList();");
+    	
+    	
+    	
+    	
+    	
+    	
     	bodyBuilder.appendFormalLine("System.out.print(\"finding all audits\");");
  
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
