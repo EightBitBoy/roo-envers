@@ -42,6 +42,7 @@ public class EnversFinderMetadata extends AbstractItdTypeDetailsProvidingMetadat
 	
 	protected EnversFinderMetadata(EnversFinderAnnotationValues annotationValues, String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
 		super(identifier, aspectName, governorPhysicalTypeMetadata);
+		LOG.info("Adding EnversFinder code");
 		
 		this.annotationValues = annotationValues;
 

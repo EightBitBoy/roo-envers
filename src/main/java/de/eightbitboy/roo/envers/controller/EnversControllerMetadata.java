@@ -42,9 +42,10 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
 	
 	protected EnversControllerMetadata(EnversControllerAnnotationValues annotationValues, String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
 		super(identifier, aspectName, governorPhysicalTypeMetadata);
+		LOG.info("Adding EnversController code");
 		
 		this.annotationValues = annotationValues;
-		LOG.info("Path: " + this.annotationValues.getPath());
+		//LOG.info("Path: " + this.annotationValues.getPath());
 		
 		builder.addMethod(getListAuditsMethod());
 		
