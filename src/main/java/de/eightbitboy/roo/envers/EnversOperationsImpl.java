@@ -96,19 +96,6 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
             
             // Save changes to disk
             typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
-            
-            
-            // Add annotation @RooEnversFinder to entity
-            JavaType rooEnversFinder = new JavaType("de.eightbitboy.roo.envers.finder.RooEnversFinder");
-            
-            final List<AnnotationAttributeValue<?>> rooEnversFinderAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-            rooEnversFinderAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
-            
-            annotationBuilder = new AnnotationMetadataBuilder(rooEnversFinder, rooEnversFinderAttributes);
-            
-            classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
-            
-            typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
         }
         
         

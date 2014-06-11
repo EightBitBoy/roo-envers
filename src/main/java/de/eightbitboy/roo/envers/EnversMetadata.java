@@ -85,9 +85,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     private MethodMetadata getDoSomethingMethod() {
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
     	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
-    	
-
-    	
+ 
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
     		getId(),
     		Modifier.PUBLIC,
