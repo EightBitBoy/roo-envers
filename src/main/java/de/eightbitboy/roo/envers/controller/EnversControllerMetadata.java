@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.roo.addon.web.mvc.controller.details.JavaTypeMetadataDetails;
 import org.springframework.roo.addon.web.mvc.controller.details.JavaTypePersistenceMetadataDetails;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
@@ -43,6 +44,8 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
     private JavaType type;
     private String typeName;
     private String typeNamePlural;
+    
+    private JavaTypeMetadataDetails typeMetadataHolder;
     
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -85,11 +88,14 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
         builder.getImportRegistrationResolver().addImport(this.type);
 
         final List<AnnotationAttributeValue<?>> attributes = new ArrayList<AnnotationAttributeValue<?>>();
-        attributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/audits/{id}"));
+        attributes.add(new StringAttributeValue(new JavaSymbolName("value"), "id"));
+        
+        
+        
         final AnnotationMetadataBuilder pathVariableAnnotation = new AnnotationMetadataBuilder(PATH_VARIABLE, attributes);
 
         final List<AnnotatedJavaType> parameterTypes = Arrays.asList(
-                new AnnotatedJavaType(pathVariableAnnotation.build().getAnnotationType()),
+                new AnnotatedJavaType(new JavaType("java.lang.Long"), pathVariableAnnotation.build()),
                 new AnnotatedJavaType(MODEL));
         
         final List<JavaSymbolName> parameterNames = Arrays.asList(
@@ -97,7 +103,7 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
                 new JavaSymbolName("uiModel"));
 
         final List<AnnotationAttributeValue<?>> requestMappingAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-        requestMappingAttributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/{id}"));
+        requestMappingAttributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/audits/{id}"));
         requestMappingAttributes.add(PRODUCES_HTML);
         final AnnotationMetadataBuilder requestMapping = new AnnotationMetadataBuilder(
                 REQUEST_MAPPING, requestMappingAttributes);
