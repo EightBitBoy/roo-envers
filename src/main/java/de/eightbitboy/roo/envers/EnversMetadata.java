@@ -1,6 +1,9 @@
 package de.eightbitboy.roo.envers;
 
+import static org.springframework.roo.model.JdkJavaType.LIST;
+
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
@@ -14,6 +17,7 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
+import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -32,7 +36,10 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     private static final String PROVIDES_TYPE_STRING = EnversMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
     
+    private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
+    
     private String typeName;
+    private String typeNameFullyQualified;
     private String typeNamePlural;
     
     public static final String getMetadataIdentiferType() {
@@ -60,6 +67,7 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
         
         this.typeName = governorPhysicalTypeMetadata.getType().getSimpleTypeName();
+        this.typeNameFullyQualified = governorPhysicalTypeMetadata.getType().getFullyQualifiedTypeName();
         this.typeNamePlural = this.typeName + "s";
         
         // Add Annotations
@@ -88,15 +96,26 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     }
     
     private MethodMetadata getFindAllAuditsMethod() {
-    	LOG.info("creating findAll" + this.typeNamePlural + "Audits(\"\")");
+    	final JavaSymbolName methodName = new JavaSymbolName("findAll" + this.typeNamePlural + "Audits");
+    	LOG.info("creating " + methodName.toString() + " method");
+    	
+    	final JavaType returnType = new JavaType(
+    			LIST.getFullyQualifiedTypeName(),
+    			0,
+    			DataType.TYPE,
+    			null,
+    			Arrays.asList(destination));
+
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("System.out.print(\"foobar\");");
+        bodyBuilder.appendFormalLine("return " + ENTITY_MANAGER_METHOD_NAME
+                + "().createQuery(\"SELECT o FROM " + this.typeName + " o\", "
+                + destination.getSimpleTypeName() + ".class).getResultList();");
  
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
     		getId(),
     		Modifier.PUBLIC,
-    		new JavaSymbolName("doSomething"),
-    		JavaType.VOID_PRIMITIVE,
+    		methodName,
+    		returnType,
     		bodyBuilder);
     	
     	return methodBuilder.build();
