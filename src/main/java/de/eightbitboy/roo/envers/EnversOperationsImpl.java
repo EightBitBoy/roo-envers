@@ -32,6 +32,8 @@ import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Element;
 
+import de.eightbitboy.roo.envers.view.EnversViewManager;
+
 /**
  * Implementation of operations this add-on offers.
  *
@@ -115,6 +117,11 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
         
         typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
+    }
+    
+    public void addViews(final JavaType type){
+    	EnversViewManager viewManager = new EnversViewManager(type);
+    	viewManager.addViews();
     }
     
     /** {@inheritDoc} */

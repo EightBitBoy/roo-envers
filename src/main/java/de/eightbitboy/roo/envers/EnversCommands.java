@@ -78,5 +78,6 @@ public class EnversCommands implements CommandMarker { // All command types must
         }
     	
         operations.annotateType(target, javaPackage);
+        operations.addViews(target);
     }
 }

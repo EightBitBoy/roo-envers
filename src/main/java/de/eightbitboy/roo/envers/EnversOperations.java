@@ -23,6 +23,11 @@ public interface EnversOperations {
     void annotateType(JavaType type, JavaPackage javaPackage);
     
     /**
+     * Add views for showing audits
+     */
+    void addViews(JavaType type);
+    
+    /**
      * Setup all add-on artifacts (dependencies in this case)
      */
     void setup();
