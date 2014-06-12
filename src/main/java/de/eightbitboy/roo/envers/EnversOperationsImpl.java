@@ -108,7 +108,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
         
         final List<AnnotationAttributeValue<?>> rooEnversControllerAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-        rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName().toLowerCase()));
+        rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName()));
  
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController, rooEnversControllerAttributes);        
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
@@ -143,6 +143,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     	//TODO modify tags instead of overwriting them!!!
     	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/tags/form/fields");
     	
-    	copyDirectoryContents("tags/*.*", targetPath, true);
+    	LOG.info("disabled copying of tags");
+    	//copyDirectoryContents("tags/*.*", targetPath, true);
     }
 }

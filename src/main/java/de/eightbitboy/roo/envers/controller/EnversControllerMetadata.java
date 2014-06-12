@@ -1,12 +1,25 @@
 package de.eightbitboy.roo.envers.controller;
 
+import static org.springframework.roo.model.JavaType.STRING;
+import static org.springframework.roo.model.SpringJavaType.MODEL;
+import static org.springframework.roo.model.SpringJavaType.PATH_VARIABLE;
+import static org.springframework.roo.model.SpringJavaType.REQUEST_MAPPING;
+
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.roo.addon.web.mvc.controller.details.JavaTypePersistenceMetadataDetails;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
+import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
+import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
+import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
@@ -22,8 +35,14 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
     private static final String PROVIDES_TYPE_STRING = EnversControllerMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
     
+    private static final StringAttributeValue PRODUCES_HTML = new StringAttributeValue(
+            new JavaSymbolName("produces"), "text/html");
+    
     private EnversControllerAnnotationValues annotationValues;
 
+    private String typeName;
+    private String typeNamePlural;
+    
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
     }
@@ -45,7 +64,9 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
 		LOG.info("Adding EnversController code");
 		
 		this.annotationValues = annotationValues;
-		//LOG.info("Path: " + this.annotationValues.getPath());
+		
+		this.typeName = this.annotationValues.getPath();
+		this.typeNamePlural = this.typeName + "s";
 		
 		builder.addMethod(getListAuditsMethod());
 		
@@ -54,19 +75,41 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
 	
     private MethodMetadata getListAuditsMethod() {
     	final JavaSymbolName methodName = new JavaSymbolName("listAudits");
-    	
-    	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
-    	
+        if (governorHasMethodWithSameName(methodName)) {
+            return null;
+        }
 
-    	
-    	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-    		getId(),
-    		Modifier.PUBLIC,
-    		methodName,
-    		JavaType.VOID_PRIMITIVE,
-    		bodyBuilder);
-    	
-    	return methodBuilder.build();
+        final List<AnnotationAttributeValue<?>> attributes = new ArrayList<AnnotationAttributeValue<?>>();
+        attributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/audits/{id}"));
+        final AnnotationMetadataBuilder pathVariableAnnotation = new AnnotationMetadataBuilder(PATH_VARIABLE, attributes);
+
+        final List<AnnotatedJavaType> parameterTypes = Arrays.asList(
+                new AnnotatedJavaType(pathVariableAnnotation.build().getAnnotationType()),
+                new AnnotatedJavaType(MODEL));
+        
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName("id"),
+                new JavaSymbolName("uiModel"));
+
+        final List<AnnotationAttributeValue<?>> requestMappingAttributes = new ArrayList<AnnotationAttributeValue<?>>();
+        requestMappingAttributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/{id}"));
+        requestMappingAttributes.add(PRODUCES_HTML);
+        final AnnotationMetadataBuilder requestMapping = new AnnotationMetadataBuilder(
+                REQUEST_MAPPING, requestMappingAttributes);
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        annotations.add(requestMapping);
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+
+        bodyBuilder.appendFormalLine("uiModel.addAttribute(\""
+                + this.typeName.toLowerCase() + "\", "
+                + this.typeName + ".find" + this.typeName + "(id)" + ");");
+        bodyBuilder.appendFormalLine("return \"" + this.typeNamePlural.toLowerCase() + "/show\";");
+
+        final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+                getId(), Modifier.PUBLIC, methodName, STRING, parameterTypes,
+                parameterNames, bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        return methodBuilder.build();
     }
 }
