@@ -15,6 +15,7 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.details.annotations.ClassAttributeValue;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.operations.AbstractOperations;
 import org.springframework.roo.metadata.MetadataService;
@@ -108,7 +109,7 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
         JavaType rooEnversController = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
         
         final List<AnnotationAttributeValue<?>> rooEnversControllerAttributes = new ArrayList<AnnotationAttributeValue<?>>();
-        rooEnversControllerAttributes.add(new StringAttributeValue(new JavaSymbolName("path"), type.getSimpleTypeName()));
+        rooEnversControllerAttributes.add(new ClassAttributeValue(new JavaSymbolName("type"), type));
  
         AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(rooEnversController, rooEnversControllerAttributes);        
         classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());

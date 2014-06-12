@@ -9,7 +9,7 @@ import org.springframework.roo.model.JavaType;
 
 public class EnversControllerAnnotationValues extends AbstractAnnotationValues {
 
-	@AutoPopulate String path;
+	@AutoPopulate JavaType type;
 	
 	static final JavaType ROO_ENVERS_CONTROLLER = new JavaType("de.eightbitboy.roo.envers.controller.RooEnversController");
 	
@@ -23,7 +23,7 @@ public class EnversControllerAnnotationValues extends AbstractAnnotationValues {
 		AutoPopulationUtils.populate(this, annotationMetadata);
 	}
 	
-	public String getPath(){
-		return path;
+	public JavaType getType(){
+		return type;
 	}
 }

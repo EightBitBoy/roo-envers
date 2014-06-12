@@ -40,6 +40,7 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
     
     private EnversControllerAnnotationValues annotationValues;
 
+    private JavaType type;
     private String typeName;
     private String typeNamePlural;
     
@@ -65,7 +66,8 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
 		
 		this.annotationValues = annotationValues;
 		
-		this.typeName = this.annotationValues.getPath();
+		this.type = this.annotationValues.getType();
+		this.typeName = this.type.getSimpleTypeName();
 		this.typeNamePlural = this.typeName + "s";
 		
 		builder.addMethod(getListAuditsMethod());
@@ -78,6 +80,9 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
         if (governorHasMethodWithSameName(methodName)) {
             return null;
         }
+        
+        //make sure to import the class of the entity
+        builder.getImportRegistrationResolver().addImport(this.type);
 
         final List<AnnotationAttributeValue<?>> attributes = new ArrayList<AnnotationAttributeValue<?>>();
         attributes.add(new StringAttributeValue(new JavaSymbolName("value"), "/audits/{id}"));
