@@ -107,6 +107,8 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     			Arrays.asList(destination));
 
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+    	bodyBuilder.appendFormalLine("//work in progress");
+    	bodyBuilder.appendFormalLine("//TODO use auditreader to get revisions");
         bodyBuilder.appendFormalLine("return " + ENTITY_MANAGER_METHOD_NAME
                 + "().createQuery(\"SELECT o FROM " + this.typeName + " o\", "
                 + destination.getSimpleTypeName() + ".class).getResultList();");
