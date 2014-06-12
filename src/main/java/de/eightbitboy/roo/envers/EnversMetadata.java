@@ -31,7 +31,10 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 	
     private static final String PROVIDES_TYPE_STRING = EnversMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
-
+    
+    private String typeName;
+    private String typeNamePlural;
+    
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
     }
@@ -56,12 +59,14 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
         
+        this.typeName = governorPhysicalTypeMetadata.getType().getSimpleTypeName();
+        this.typeNamePlural = this.typeName + "s";
+        
         // Add Annotations
         builder.addAnnotation(getEntityAuditAnnotation());
     
         // Add Methods
-        builder.addMethod(getDoSomethingMethod()); //TODO remove this whem things start looking good
-        builder.addMethod(getListAuditsMethod());
+        builder.addMethod(getFindAllAuditsMethod()); //TODO remove this whem things start looking good
         
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -82,29 +87,16 @@ public class EnversMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     	return auditedAnnotation;
     }
     
-    private MethodMetadata getDoSomethingMethod() {
+    private MethodMetadata getFindAllAuditsMethod() {
+    	LOG.info("creating findAll" + this.typeNamePlural + "Audits(\"\")");
     	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("System.out.print(\"doing something\");");
+    	bodyBuilder.appendFormalLine("System.out.print(\"foobar\");");
  
     	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
     		getId(),
     		Modifier.PUBLIC,
     		new JavaSymbolName("doSomething"),
     		JavaType.VOID_PRIMITIVE,
-    		bodyBuilder);
-    	
-    	return methodBuilder.build();
-    }
-    
-    private MethodMetadata getListAuditsMethod() {
-    	final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-    	bodyBuilder.appendFormalLine("return \"Hello world!\";");
-    	
-    	final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-    		getId() + "Controller",
-    		Modifier.PUBLIC,
-    		new JavaSymbolName("listAudits"),
-    		JavaType.STRING,
     		bodyBuilder);
     	
     	return methodBuilder.build();
