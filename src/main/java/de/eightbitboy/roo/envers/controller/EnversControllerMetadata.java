@@ -115,6 +115,7 @@ public class EnversControllerMetadata extends AbstractItdTypeDetailsProvidingMet
         bodyBuilder.appendFormalLine("uiModel.addAttribute(\""
                 + this.typeName.toLowerCase() + "\", "
                 + this.typeName + ".find" + this.typeName + "(id)" + ");");
+        bodyBuilder.appendFormalLine("uiModel.addAttribute(\"itemId\", id);");
         bodyBuilder.appendFormalLine("return \"" + this.typeNamePlural.toLowerCase() + "/show\";");
 
         final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
