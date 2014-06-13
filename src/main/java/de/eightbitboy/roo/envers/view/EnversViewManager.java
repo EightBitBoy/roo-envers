@@ -1,25 +1,32 @@
 package de.eightbitboy.roo.envers.view;
 
+import static org.springframework.roo.model.JdkJavaType.CALENDAR;
+import static org.springframework.roo.model.JdkJavaType.DATE;
+
+import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.DocumentBuilder;
+
 import org.apache.felix.scr.annotations.Reference;
-import org.springframework.roo.metadata.MetadataItem;
-import org.springframework.roo.metadata.MetadataNotificationListener;
-import org.springframework.roo.metadata.MetadataProvider;
+import org.springframework.roo.classpath.customdata.CustomDataKeys;
+import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
-import org.springframework.roo.project.LogicalPath;
-import org.springframework.roo.project.Path;
-import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.roo.support.util.XmlElementBuilder;
+import org.springframework.roo.support.util.XmlRoundTripUtils;
+import org.springframework.roo.support.util.XmlUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-public class EnversViewManager implements MetadataProvider,
-MetadataNotificationListener {
+import de.eightbitboy.roo.envers.util.XmlRoundTripFileManager;
+
+public class EnversViewManager {
 	@Reference private FileManager fileManager;
 	@Reference private ProjectOperations projectOperations;
-	
-	private static final String WEB_INF_VIEWS = "/WEB-INF/views/";
+	@Reference private XmlRoundTripFileManager xmlRoundTripFileManager;
 	
 	private static Logger LOG = HandlerUtils.getLogger(EnversViewManager.class);
 	
@@ -38,33 +45,71 @@ MetadataNotificationListener {
 	public void addViews(){
 		LOG.info("Adding Envers views");
 		
+		final String listAuditsViewPath = this.targetPath + "/listaudits.jspx";
+		
 		/*
-		final PathResolver pathResolver = this.projectOperations.getPathResolver();
-        final LogicalPath webappPath = LogicalPath.getInstance(Path.SRC_MAIN_WEBAPP, null);
-        String destinationPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/views/" + this.typeNamePlural.toLowerCase());
+		Document foo = this.getListAuditsView();
+		LOG.info(foo.toString());
+		*/
+		
+		//TODO, WHY IS DOCUMENT NULL???????????????
+		
+		/*
+		final DocumentBuilder builder = XmlUtils.getDocumentBuilder();
+        final Document document = builder.newDocument();
+        
+        LOG.info("LOL " + document.toString());
+		
+        xmlRoundTripFileManager.writeToDiskIfNecessary(listAuditsViewPath, this.getListAuditsView());
         */
-        LOG.info(this.targetPath);
 	}
 	
-	private void getListAuditsView(){
-		
-	}
+	private Document getListAuditsView(){
+		final DocumentBuilder builder = XmlUtils.getDocumentBuilder();
+        final Document document = builder.newDocument();
 
-	@Override
-	public void notify(String upstreamDependency, String downstreamDependency) {
-		// TODO Auto-generated method stub
-		
-	}
+        // Add document namespaces
+        final Element div = new XmlElementBuilder("div", document)
+                .addAttribute("xmlns:page", "urn:jsptagdir:/WEB-INF/tags/form")
+                .addAttribute("xmlns:table",
+                        "urn:jsptagdir:/WEB-INF/tags/form/fields")
+                .addAttribute("xmlns:jsp", "http://java.sun.com/JSP/Page")
+                .addAttribute("version", "2.0")
+                .addChild(
+                        new XmlElementBuilder("jsp:directive.page", document)
+                                .addAttribute("contentType",
+                                        "text/html;charset=UTF-8").build())
+                .addChild(
+                        new XmlElementBuilder("jsp:output", document)
+                                .addAttribute("omit-xml-declaration", "yes")
+                                .build()).build();
+        document.appendChild(div);
 
-	@Override
-	public MetadataItem get(String metadataIdentificationString) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        final Element fieldTable = new XmlElementBuilder("table:table",
+                document)
+                .addAttribute(
+                        "id",
+                        XmlUtils.convertId("l:" + this.type.getFullyQualifiedTypeName()))
+                .addAttribute(
+                        "data",
+                        "${}")
+                .addAttribute("path", "foooo").build();
+        
+        final Element pageList = new XmlElementBuilder("page:list", document)
+        .addAttribute(
+		                "id",
+		                XmlUtils.convertId("pl:"
+		                        + this.type.getFullyQualifiedTypeName()))
+		        .addAttribute(
+		                "items",
+		                "${"
+		                        + this.typeNamePlural
+		                                .toLowerCase() + "}")
+		        .addChild(fieldTable).build();
+		pageList.setAttribute("z",
+		        XmlRoundTripUtils.calculateUniqueKeyFor(pageList));
+		div.appendChild(pageList);
 
-	@Override
-	public String getProvidesType() {
-		// TODO Auto-generated method stub
-		return null;
+        return document;
 	}
 }
