@@ -120,7 +120,8 @@ public class EnversOperationsImpl extends AbstractOperations implements EnversOp
     }
     
     public void addViews(final JavaType type){
-    	EnversViewManager viewManager = new EnversViewManager(type);
+    	String targetPath = pathResolver.getFocusedIdentifier(Path.SRC_MAIN_WEBAPP, "/WEB-INF/views/");
+    	EnversViewManager viewManager = new EnversViewManager(type, targetPath);
     	viewManager.addViews();
     }
     
