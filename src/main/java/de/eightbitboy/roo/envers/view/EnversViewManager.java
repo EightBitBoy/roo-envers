@@ -41,10 +41,33 @@ public class EnversViewManager {
 		
 		final String listAuditsViewPath = this.targetPath + "/listaudits.jspx";
 		
+		final DocumentBuilder builer = XmlUtils.getDocumentBuilder();
+		Document foo = builer.newDocument();
 		/*
-		Document foo = this.getListAuditsView();
+		foo.createComment("foobar");
+		new XmlElementBuilder("div", foo)
+	        .addAttribute("xmlns:form",
+	                "urn:jsptagdir:/WEB-INF/tags/form")
+	        .addAttribute("xmlns:field",
+	                "urn:jsptagdir:/WEB-INF/tags/form/fields")
+	        .addAttribute("xmlns:jsp",
+	                "http://java.sun.com/JSP/Page")
+	        .addAttribute("version", "2.0")
+	        .addChild(
+                                new XmlElementBuilder("jsp:directive.page",
+                                        foo).addAttribute("contentType",
+                                        "text/html;charset=UTF-8").build())
+	        .build();
+	    */
+		LOG.info("foobar: ");
 		LOG.info(foo.toString());
-		*/
+		foo.createComment("foobar");
+		LOG.info(foo.toString());
+		foo.createElement("foo:bar");
+		LOG.info(foo.toString());
+		LOG.info(foo.toString());
+		LOG.info(foo.toString());
+		
 		
 		//TODO, WHY IS DOCUMENT NULL???????????????
 		
