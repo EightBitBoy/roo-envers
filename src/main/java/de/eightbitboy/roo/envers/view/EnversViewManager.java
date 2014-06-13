@@ -1,16 +1,10 @@
 package de.eightbitboy.roo.envers.view;
 
-import static org.springframework.roo.model.JdkJavaType.CALENDAR;
-import static org.springframework.roo.model.JdkJavaType.DATE;
-
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.felix.scr.annotations.Reference;
-import org.springframework.roo.classpath.customdata.CustomDataKeys;
-import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.ProjectOperations;
